@@ -3,6 +3,12 @@ import os,time
 from Instrument_Control import *
 from CONSTANTS import *
 from Analyse import *
+import os
+
+#获取上级目录callInterface
+curr_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)),os.path.pardir))
+RFID_power_path = os.path.join(curr_path,"RFID-power.xls")
+RFID_ACPR_path = os.path.join(curr_path,"RFID-ACPR.xls")
 
 agilent_client = Agilent()
 agilent_client.OpenInstrument()
@@ -30,7 +36,7 @@ def testFrqPower(fCenterFrequency,fRefer,fPower,fChannelIndex,curr_col):
         if float(y) > 0 or num == 0:
             break
 
-    write_PowerResult(fPower,"RFID-power.xls",curr_col,y)
+    write_PowerResult(fPower,RFID_power_path,curr_col,y)
     print u"频谱仪测试结果：中心频点值{0}".format(x)
     print u"频谱仪测试结果：功率值{0}".format(y)
 
@@ -57,7 +63,7 @@ def analyze_ACPR(data,ModulationType_text,curr_num):
     print u"第二个低邻道的泄漏比:{0}".format(lower_num2)
     print u"第一个高邻道的泄漏比:{0}".format(upper_num1)
     print u"第二个高邻道的泄漏比:{0}".format(upper_num2)
-    write_file(ModulationType_text,"RFID-ACPR.xls",curr_num,lower_num2,lower_num1,upper_num1,upper_num2)
+    write_file(ModulationType_text,RFID_ACPR_path,curr_num,lower_num2,lower_num1,upper_num1,upper_num2)
 
 #邻道功率泄漏比
 def testACPR(ModulationType_text,curr_num):

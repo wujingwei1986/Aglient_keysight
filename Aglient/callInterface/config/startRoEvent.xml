@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<SET_READER_CONFIG   xmlns:llrp="http://www.llrp.org/ltk/schema/core/encoding/xml/1.0" Version="1" MessageID="4">
+    <ResetToFactoryDefault>0</ResetToFactoryDefault>
+    <ReaderEventNotificationSpec>
+    <EventNotificationState>
+      <EventType>ROSpec_Event</EventType>
+      <NotificationState>1</NotificationState>
+    </EventNotificationState>
+  </ReaderEventNotificationSpec>
+</SET_READER_CONFIG>

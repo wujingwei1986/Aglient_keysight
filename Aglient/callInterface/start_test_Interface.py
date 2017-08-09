@@ -1,10 +1,17 @@
 # -*- coding: GB18030 -*-
 from ctypes import *
-from structfile import *
+from common.structfile import *
 import logging,threading,time
-from constant import *
+from common.constant import *
 from aglient_control import Device_Test,Instrument_Control
-from Opxml import *
+from common.Opxml import *
+import os
+
+#获取run_main的路径
+curr_path = os.path.dirname(os.path.realpath(__file__))
+configData_path = os.path.join(curr_path,"config")
+testData_abspath = os.path.join(configData_path,"test_data.xml")
+configData_abspath = os.path.join(configData_path,"config_data.xml")
 
 def DealRoReport(report):
     if report.contents.type == RO_REPORT:
@@ -216,24 +223,25 @@ def checkTransmitPower(antidindex,powerval):
         print u"！！！天线功率设置失败！！！"
 
 def testFrequencyPower():
+
     powerlist = [15,26,30]
     for powernum in powerlist:
         for i in range(20):
             #读取xml文件
-            tree = read_xml("test_data.xml")
+            tree = read_xml(testData_abspath)
             curr_data = find_nodes(tree, "Data")[0].text #获取当前参数值
             new_data = change_Power_ChannelIndex_text(curr_data,powernum,i) #修改发射功率和频点值
             #修改节点文本
             change_node_text(find_nodes(tree, "Data"), new_data) #将修改的值插入指定的节点
             #输出到结果文件
-            write_xml(tree, "config_data.xml")
+            write_xml(tree, configData_abspath)
             power = powernum
             channelIndex = i #当前频点
             curr_col = i #获取excel当前列
 
             #send *.xml文件
             time.sleep(1)
-            InstLibrary.sendLlrpMsgFromFile(s_nDevHandle, "config_data.xml", None)
+            InstLibrary.sendLlrpMsgFromFile(s_nDevHandle, configData_abspath, None)
             threadlist = []
             CenterFrequency = 840.125 + i*0.25
             #周期性清点
@@ -254,7 +262,7 @@ def test_AllParame_ACPR():
     ModulationType_GB = [1,3]  #前向链路调制方式
     DataEncodeType_GB = [0,1,2,3]  #编码方式
     ForwardReverseDataRate_GB = [(40,80),(40,160),(40,320),(40,640),(80,80),(80,160),(80,320),(80,640)] #数据传输速率
-    tree = read_xml("test_data.xml")
+    tree = read_xml(testData_abspath)
     curr_data = find_nodes(tree, "Data")[0].text #获取当前参数值
     power = get_power_text(curr_data) #获取当前功率值
     curr_num = 0 #定义当前执行的是第几组参数
@@ -266,9 +274,9 @@ def test_AllParame_ACPR():
                 #修改节点文本
                 change_node_text(find_nodes(tree, "Data"), new_data) #将修改的值插入指定的节点
                 #输出到结果文件
-                write_xml(tree, "config_data.xml")
+                write_xml(tree, configData_abspath)
                 time.sleep(1)
-                InstLibrary.sendLlrpMsgFromFile(s_nDevHandle, "config_data.xml", None)
+                InstLibrary.sendLlrpMsgFromFile(s_nDevHandle, configData_abspath, None)
                 print u"==========开始ACPR测试=========="
                 if ModulationType_text == 1:
                     ModulationName = "DSB-ASK"
