@@ -7,8 +7,8 @@ import os
 
 #获取上级目录callInterface
 curr_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)),os.path.pardir))
-RFID_power_path = os.path.join(curr_path,"RFID-power.xls")
-RFID_ACPR_path = os.path.join(curr_path,"RFID-ACPR.xls")
+RFID_power_path = os.path.join(curr_path,"result_file"+"\RFID-power.xls")
+RFID_ACPR_path = os.path.join(curr_path,"result_file"+"\RFID-ACPR.xls")
 
 agilent_client = Agilent()
 agilent_client.OpenInstrument()
